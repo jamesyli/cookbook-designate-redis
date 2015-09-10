@@ -1,0 +1,1 @@
+# cookbook-designate-redis
