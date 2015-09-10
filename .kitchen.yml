@@ -1,0 +1,42 @@
+---
+driver_plugin: vagrant
+driver_config:
+  require_chef_omnibus: 11.16.4
+driver:
+  network:
+  - ["forwarded_port", {guest: 80, host: 80}]
+  - ["forwarded_port", {guest: 443, host: 443}]
+  - ["forwarded_port", {guest: 8091, host: 8091}]
+  - ["forwarded_port", {guest: 9001, host: 9011}]
+  - ["private_network", {ip: "192.168.33.33"}]
+  - ["private_network", {ip: "192.168.44.44"}]
+
+provisioner:
+  name: chef_zero
+
+platforms:
+  - name: ubuntu-14.04
+    attributes: {
+      "chef_client": {
+        "handler": {
+          "slack": {
+            "webhooks": {
+              "name": []
+            }
+          }
+        }
+      }
+    }
+
+suites:
+  - name: default
+    run_list:
+      - recipe[designate-redis]
+    attributes: {
+      "designate": {
+        "firewall": {
+          "enabled": false
+        }
+      },
+    }
+
